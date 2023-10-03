@@ -2,6 +2,7 @@ package com.projeto.PI.Mobile.controller;
 
 import com.projeto.PI.Mobile.domain.Usuario;
 import com.projeto.PI.Mobile.requests.UsuarioPostRequestBody;
+import com.projeto.PI.Mobile.requests.UsuarioPutRequestBody;
 import com.projeto.PI.Mobile.service.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,5 +24,15 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> save(@RequestBody UsuarioPostRequestBody usuarioPostRequestBody) {
         return new ResponseEntity<>(usuarioService.save(usuarioPostRequestBody), HttpStatus.CREATED);
+    }
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody UsuarioPutRequestBody usuarioPutRequestBody) {
+        usuarioService.replace(usuarioPutRequestBody);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id){
+        usuarioService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
