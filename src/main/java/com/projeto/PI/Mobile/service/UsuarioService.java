@@ -2,6 +2,7 @@ package com.projeto.PI.Mobile.service;
 
 import com.projeto.PI.Mobile.domain.Usuario;
 import com.projeto.PI.Mobile.repository.UsuarioRepository;
+import com.projeto.PI.Mobile.requests.UsuarioAuthRequestBody;
 import com.projeto.PI.Mobile.requests.UsuarioPostRequestBody;
 import com.projeto.PI.Mobile.requests.UsuarioPutRequestBody;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class UsuarioService {
 
     public List<Usuario> listAll() {
         return usuarioRepository.findAll();
+    }
+
+    public Boolean auth(UsuarioAuthRequestBody usuarioAuthRequestBody) {
+        Usuario usuario = findByEmail(usuarioAuthRequestBody.getEmail());
+        if(usuario == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou Senha incorreto");
+        }
+        return usuario.getSenha().equals(usuarioAuthRequestBody.getSenha());
     }
     public Usuario findById(long id) {
         return usuarioRepository.findById(id)

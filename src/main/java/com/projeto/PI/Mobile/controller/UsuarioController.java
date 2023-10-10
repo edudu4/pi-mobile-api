@@ -1,6 +1,7 @@
 package com.projeto.PI.Mobile.controller;
 
 import com.projeto.PI.Mobile.domain.Usuario;
+import com.projeto.PI.Mobile.requests.UsuarioAuthRequestBody;
 import com.projeto.PI.Mobile.requests.UsuarioPostRequestBody;
 import com.projeto.PI.Mobile.requests.UsuarioPutRequestBody;
 import com.projeto.PI.Mobile.service.UsuarioService;
@@ -24,6 +25,10 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> save(@RequestBody UsuarioPostRequestBody usuarioPostRequestBody) {
         return new ResponseEntity<>(usuarioService.save(usuarioPostRequestBody), HttpStatus.CREATED);
+    }
+    @PostMapping(path = "/auth")
+    public ResponseEntity<Boolean> auth(@RequestBody UsuarioAuthRequestBody usuarioAuthRequestBody) {
+        return ResponseEntity.ok(usuarioService.auth(usuarioAuthRequestBody));
     }
     @PutMapping
     public ResponseEntity<Void> replace(@RequestBody UsuarioPutRequestBody usuarioPutRequestBody) {
