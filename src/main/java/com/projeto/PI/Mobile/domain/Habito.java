@@ -1,5 +1,6 @@
 package com.projeto.PI.Mobile.domain;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,12 +29,15 @@ public class Habito {
     @Column(name = "tocar_alarme")
     boolean tocarAlarme;
     @Lob
-    byte[] imagem;
+    @JsonIgnore
+    String imagem;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnore
     Usuario usuario;
 
     @OneToMany(mappedBy = "habito")
+    @JsonIgnore
     List<HabitoConcluido> habitoConcluidos;
 }

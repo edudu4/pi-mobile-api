@@ -4,6 +4,7 @@ import com.projeto.PI.Mobile.domain.Habito;
 import com.projeto.PI.Mobile.repository.HabitoRepository;
 import com.projeto.PI.Mobile.requests.HabitoPostRequestBody;
 import com.projeto.PI.Mobile.requests.HabitoPutRequestBody;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class HabitoService {
         return habitoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hábito não encontrado."));
     }
+
+    @Transactional(rollbackOn = Exception.class)
     public Habito save(HabitoPostRequestBody habitoPostRequestBody) {
         LocalDate dataFormatada = LocalDate.parse(habitoPostRequestBody.getDataInicio(),
                 DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -44,15 +47,9 @@ public class HabitoService {
                 .dataInicio(dataFormatada)
                 .horarioAlarme(horaFormatada)
                 .usuario(usuarioService.findById(habitoPostRequestBody.getUsuarioId()))
+                .imagem(habitoPostRequestBody.getImagem())
                 .build();
 
-        try {
-            byte[] imagemBytes = habitoPostRequestBody.getImagem().getBytes();
-            habito.setImagem(imagemBytes);
-        } catch (IOException e) {
-            habito.setImagem(null);
-            e.printStackTrace();
-        }
         return habitoRepository.save(habito);
     }
 
@@ -79,11 +76,11 @@ public class HabitoService {
                 .usuario(habitoSalvo.getUsuario())
                 .build());
     }
-    public void replaceImage(MultipartFile imagem, long id) {
+    public void uploadImage(MultipartFile imagem, long id) {
         try {
             Habito habito = findById(id);
             byte[] imagemBytes = imagem.getBytes();
-            habito.setImagem(imagemBytes);
+            //habito.setImagem(imagemBytes);
         } catch (IOException e) {
             e.printStackTrace();
         }
