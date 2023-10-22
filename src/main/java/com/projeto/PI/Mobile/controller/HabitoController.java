@@ -1,5 +1,6 @@
 package com.projeto.PI.Mobile.controller;
 
+import com.projeto.PI.Mobile.controller.utils.ImageUtils;
 import com.projeto.PI.Mobile.domain.Habito;
 import com.projeto.PI.Mobile.projection.HabitoProjection;
 import com.projeto.PI.Mobile.requests.HabitoPostRequestBody;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("habitos")
@@ -32,7 +34,7 @@ public class HabitoController {
                     habitoProjection.setHorarioAlarme(habito.getHorarioAlarme());
                     habitoProjection.setTocarAlarme(habito.isTocarAlarme());
                     habitoProjection.setUsuarioId(habito.getUsuario().getId());
-                    habitoProjection.setImagem(habito.getImagem());
+                    habitoProjection.setImagem(Arrays.toString(ImageUtils.decompressImage(habito.getImagem())));
                     return habitoProjection;
                 }).toList();
         return new ResponseEntity<>(habitoProjections, HttpStatus.OK);

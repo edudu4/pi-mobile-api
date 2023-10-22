@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,9 +27,10 @@ public class Habito {
     LocalTime horarioAlarme;
     @Column(name = "tocar_alarme")
     boolean tocarAlarme;
-    @Lob
     @JsonIgnore
-    String imagem;
+    @Lob
+    @Column(name = "imagedata",length = 1000)
+    private byte[] imagem;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")

@@ -1,8 +1,7 @@
 package com.projeto.PI.Mobile.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +26,14 @@ public class Usuario {
     @Column(name = "data_nascimento")
     @JsonFormat(pattern = "dd-MM-yyyy")
     LocalDate dataNascimento;
+    @Lob
+    private byte[] fotoPerfil;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     List<Habito> habitos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     List<HabitoConcluido> habitoConcluidos;
 

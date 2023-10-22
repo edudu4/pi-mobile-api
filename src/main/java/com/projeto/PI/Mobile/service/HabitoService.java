@@ -1,5 +1,6 @@
 package com.projeto.PI.Mobile.service;
 
+import com.projeto.PI.Mobile.controller.utils.ImageUtils;
 import com.projeto.PI.Mobile.domain.Habito;
 import com.projeto.PI.Mobile.repository.HabitoRepository;
 import com.projeto.PI.Mobile.requests.HabitoPostRequestBody;
@@ -47,7 +48,7 @@ public class HabitoService {
                 .dataInicio(dataFormatada)
                 .horarioAlarme(horaFormatada)
                 .usuario(usuarioService.findById(habitoPostRequestBody.getUsuarioId()))
-                .imagem(habitoPostRequestBody.getImagem())
+                .imagem(ImageUtils.compressImage(habitoPostRequestBody.getImagem().getBytes()))
                 .build();
 
         return habitoRepository.save(habito);
