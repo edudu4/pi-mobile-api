@@ -13,6 +13,6 @@ public class HabitoPostRequestBody {
     String dataInicio;
     String horarioAlarme;
     boolean tocarAlarme;
-    String imagem;
+    byte[] imagem;
 
 }

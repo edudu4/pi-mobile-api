@@ -27,9 +27,18 @@ public class HabitoService {
     public List<Habito> listAll() {
         return habitoRepository.findAll();
     }
-    public Habito findById(long id){
+
+    public Habito findById(Long id) {
         return habitoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hábito não encontrado."));
+    }
+
+    public List<Habito> findByUsuarioId(Long id) {
+        List<Habito> habitos = habitoRepository.findHabitosByUsuarioId(id);
+        for (Habito habito : habitos) {
+            habito.setImagem(ImageUtils.decompressImage(habito.getImagem()));
+        }
+        return habitos;
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -48,7 +57,7 @@ public class HabitoService {
                 .dataInicio(dataFormatada)
                 .horarioAlarme(horaFormatada)
                 .usuario(usuarioService.findById(habitoPostRequestBody.getUsuarioId()))
-                .imagem(ImageUtils.compressImage(habitoPostRequestBody.getImagem().getBytes()))
+                .imagem(ImageUtils.compressImage(habitoPostRequestBody.getImagem()))
                 .build();
 
         return habitoRepository.save(habito);
@@ -63,7 +72,7 @@ public class HabitoService {
 
         Habito habitoSalvo = findById(habitoPutRequestBody.getId());
 
-        if(habitoSalvo == null) {
+        if (habitoSalvo == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Hábito não encontrado");
         }
         habitoRepository.save(Habito.builder()
@@ -77,6 +86,7 @@ public class HabitoService {
                 .usuario(habitoSalvo.getUsuario())
                 .build());
     }
+
     public void uploadImage(MultipartFile imagem, long id) {
         try {
             Habito habito = findById(id);
@@ -87,7 +97,7 @@ public class HabitoService {
         }
     }
 
-    public void delete(long id ) {
+    public void delete(long id) {
         habitoRepository.delete(findById(id));
     }
 }

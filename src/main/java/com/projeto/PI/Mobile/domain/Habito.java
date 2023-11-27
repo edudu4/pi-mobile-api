@@ -22,14 +22,14 @@ public class Habito {
     Long id;
     String nome;
     @Column(name = "data_inicio")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     LocalDate dataInicio;
     @Column(name = "horario_alarme")
     LocalTime horarioAlarme;
     @Column(name = "tocar_alarme")
     boolean tocarAlarme;
-    @JsonIgnore
     @Lob
-    @Column(name = "imagedata",length = 1000)
+    @Column(name = "imagedata")
     private byte[] imagem;
 
     @ManyToOne

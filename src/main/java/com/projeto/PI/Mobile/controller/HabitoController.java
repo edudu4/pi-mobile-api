@@ -23,25 +23,17 @@ public class HabitoController {
     private final HabitoService habitoService;
 
     @GetMapping
-    public ResponseEntity<List<HabitoProjection>> list() {
-        List<Habito> habitos = habitoService.listAll();
-        List<HabitoProjection> habitoProjections = habitos.stream()
-                .map(habito -> {
-                    HabitoProjection habitoProjection = new HabitoProjection();
-                    habitoProjection.setId(habito.getId());
-                    habitoProjection.setNome(habito.getNome());
-                    habitoProjection.setDataInicio(habito.getDataInicio());
-                    habitoProjection.setHorarioAlarme(habito.getHorarioAlarme());
-                    habitoProjection.setTocarAlarme(habito.isTocarAlarme());
-                    habitoProjection.setUsuarioId(habito.getUsuario().getId());
-                    habitoProjection.setImagem(Arrays.toString(ImageUtils.decompressImage(habito.getImagem())));
-                    return habitoProjection;
-                }).toList();
-        return new ResponseEntity<>(habitoProjections, HttpStatus.OK);
+    public ResponseEntity<List<Habito>> list() {
+        return new ResponseEntity<>(habitoService.listAll(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/user/{id}")
+    public ResponseEntity<List<Habito>> findByUsuarioId(@PathVariable Long id) {
+        return new ResponseEntity<>(habitoService.findByUsuarioId(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/image/{id}")
-    public ResponseEntity<?> habitoImagem(@PathVariable long id) {
+    public ResponseEntity<?> habitoImagem(@PathVariable Long id) {
         Habito habito = habitoService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/jpg"))
@@ -53,7 +45,7 @@ public class HabitoController {
         return ResponseEntity.ok(habitoService.findById(id));
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping
     public ResponseEntity<Habito> save(@RequestBody HabitoPostRequestBody habitoPostRequestBody) {
         return new ResponseEntity<>(habitoService.save(habitoPostRequestBody), HttpStatus.NO_CONTENT);
     }
